@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iCore Canonical System – Prototype</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">iC</div>
+        <div>
+          <div class="brand-title">iCore Canonical</div>
+          <div class="brand-sub">Semantic Layer</div>
+        </div>
+      </div>
+
+      <div class="workspace-switch">
+        <label>Workspace</label>
+        <select id="workspaceSelect">
+          <option value="admin">Canonical Admin</option>
+          <option value="onboarding">Use Case Onboarding</option>
+        </select>
+      </div>
+
+      <nav id="adminNav" class="nav-group">
+        <div class="nav-caption">Maintenance</div>
+        <button class="nav-item active" data-view="admin-dashboard">Overview</button>
+        <button class="nav-item" data-view="entities">Canonical Entities</button>
+        <button class="nav-item" data-view="relations">Relations</button>
+        <button class="nav-item" data-view="attributes">Attributes & Semantics</button>
+        <button class="nav-item" data-view="versions">Versions & Changes</button>
+        <button class="nav-item" data-view="quality">Quality & Conflicts</button>
+      </nav>
+
+      <nav id="onboardingNav" class="nav-group hidden">
+        <div class="nav-caption">New Use Case</div>
+        <button class="nav-item active" data-view="onboarding-start">1. Use Case</button>
+        <button class="nav-item" data-view="source-model">2. Source Model</button>
+        <button class="nav-item" data-view="mapping">3. Canonical Mapping</button>
+        <button class="nav-item" data-view="validation">4. Validation</button>
+        <button class="nav-item" data-view="publish">5. Publish</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="env-dot"></div>
+        <span>DEV · Semantic Registry v2.4</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1 id="pageTitle">Canonical Maintenance</h1>
+          <p id="pageSubtitle">Zentrales Datenmodell verwalten, stabil halten und Änderungen kontrolliert ausrollen.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn secondary" id="simulateBtn">Simulate Change</button>
+          <button class="btn primary" id="primaryAction">New Entity</button>
+        </div>
+      </header>
+
+      <section id="content"></section>
+    </main>
+  </div>
+
+  <template id="admin-dashboard">
+    <div class="grid stats-grid">
+      <div class="card stat"><span>Canonical Entities</span><strong>42</strong><small>+3 this quarter</small></div>
+      <div class="card stat"><span>Relations</span><strong>68</strong><small>8 cross-domain</small></div>
+      <div class="card stat"><span>Active Use Cases</span><strong>17</strong><small>13 fully compatible</small></div>
+      <div class="card stat warning"><span>Open Conflicts</span><strong>4</strong><small>2 require decision</small></div>
+    </div>
+
+    <div class="grid two-col">
+      <div class="card">
+        <div class="card-head"><div><h2>Canonical Domains</h2><p>Zentrale fachliche Domänen und Reifegrad.</p></div><button class="link-btn">View all</button></div>
+        <div class="domain-list">
+          <div class="domain-row"><div class="icon blue">CU</div><div class="grow"><b>Customer</b><span>Party, Person, Organization, Address</span></div><span class="badge green">Stable</span></div>
+          <div class="domain-row"><div class="icon purple">CO</div><div class="grow"><b>Contract</b><span>Contract, Policy, Agreement, Role</span></div><span class="badge green">Stable</span></div>
+          <div class="domain-row"><div class="icon orange">PR</div><div class="grow"><b>Product</b><span>Product, Offering, Feature, Price</span></div><span class="badge amber">Review</span></div>
+          <div class="domain-row"><div class="icon cyan">CL</div><div class="grow"><b>Claim</b><span>Claim, Damage, Reserve, Payment</span></div><span class="badge green">Stable</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Recent Model Changes</h2><p>Auswirkungen auf Use Cases vor Veröffentlichung.</p></div></div>
+        <div class="timeline">
+          <div class="timeline-item"><span class="dot green"></span><div><b>Party.contactPreferences added</b><small>Compatible · 6 affected mappings</small></div><time>Today</time></div>
+          <div class="timeline-item"><span class="dot amber"></span><div><b>Contract.partner embedded → relation</b><small>Migration required · 3 use cases</small></div><time>2d</time></div>
+          <div class="timeline-item"><span class="dot green"></span><div><b>Product.externalIds generalized</b><small>Compatible · no action</small></div><time>5d</time></div>
+          <div class="timeline-item"><span class="dot red"></span><div><b>Address.street2 deprecated</b><small>Breaking after v3.0 · 2 mappings</small></div><time>8d</time></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div><h2>Use Case Compatibility</h2><p>Wie gut passen angebundene Datenmodelle zum zentralen Canonical?</p></div><button class="btn secondary small">Run validation</button></div>
+      <table>
+        <thead><tr><th>Use Case</th><th>Domain</th><th>Canonical Version</th><th>Fit</th><th>Conflicts</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Claims Service Portal</td><td>Claim / Customer</td><td>2.4</td><td><div class="meter"><i style="width:96%"></i></div>96%</td><td>0</td><td><span class="badge green">Healthy</span></td></tr>
+          <tr><td>Broker CRM Integration</td><td>Customer / Contract</td><td>2.3</td><td><div class="meter"><i style="width:88%"></i></div>88%</td><td>2</td><td><span class="badge amber">Review</span></td></tr>
+          <tr><td>Product Search CN</td><td>Product</td><td>2.4</td><td><div class="meter"><i style="width:100%"></i></div>100%</td><td>0</td><td><span class="badge green">Healthy</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </template>
+
+  <template id="entities">
+    <div class="split-layout">
+      <div class="card entity-tree">
+        <div class="searchbox">⌕ <input placeholder="Search entities..." /></div>
+        <div class="tree-section"><span>Customer</span><button class="tree-node active">Party</button><button class="tree-node">Person</button><button class="tree-node">Organization</button><button class="tree-node">Address</button></div>
+        <div class="tree-section"><span>Contract</span><button class="tree-node">Contract</button><button class="tree-node">ContractRole</button></div>
+        <div class="tree-section"><span>Product</span><button class="tree-node">Product</button><button class="tree-node">Offering</button></div>
+      </div>
+      <div class="card detail-card">
+        <div class="eyebrow">Customer Domain</div><h2>Party</h2><p>General representation of a person or organization participating in business processes.</p>
+        <div class="tabs"><button class="active">Attributes</button><button>Relations</button><button>Mappings</button><button>History</button></div>
+        <table><thead><tr><th>Attribute</th><th>Type</th><th>Required</th><th>Semantic meaning</th></tr></thead><tbody>
+          <tr><td><b>id</b></td><td>UUID</td><td>Yes</td><td>Canonical party identifier</td></tr>
+          <tr><td><b>partyType</b></td><td>Enum</td><td>Yes</td><td>PERSON | ORGANIZATION</td></tr>
+          <tr><td><b>displayName</b></td><td>String</td><td>Yes</td><td>Human-readable party name</td></tr>
+          <tr><td><b>externalIds</b></td><td>Map</td><td>No</td><td>Identifiers from source systems</td></tr>
+          <tr><td><b>contactPreferences</b></td><td>Object</td><td>No</td><td>Preferred communication settings</td></tr>
+        </tbody></table>
+        <div class="callout info"><b>Semantic rule:</b> Party is abstract. Source entities such as “Broker”, “Customer”, “Supplier” map to Party and receive their business role through a relation or role concept.</div>
+      </div>
+    </div>
+  </template>
+
+  <template id="relations">
+    <div class="card">
+      <div class="card-head"><div><h2>Canonical Relation Graph</h2><p>Zentrale Beziehungen zwischen Entitäten.</p></div><button class="btn primary small">Add Relation</button></div>
+      <div class="graph">
+        <div class="node n1"><b>Party</b><span>Customer</span></div>
+        <div class="node n2"><b>Contract</b><span>Agreement</span></div>
+        <div class="node n3"><b>Product</b><span>Offering</span></div>
+        <div class="node n4"><b>Claim</b><span>Loss Event</span></div>
+        <div class="edge e1"></div><div class="edge e2"></div><div class="edge e3"></div><div class="edge e4"></div>
+        <div class="edge-label l1">partyRole</div><div class="edge-label l2">covers</div><div class="edge-label l3">claimant</div><div class="edge-label l4">product</div>
+      </div>
+    </div>
+  </template>
+
+  <template id="attributes">
+    <div class="card">
+      <div class="card-head"><div><h2>Semantic Attribute Registry</h2><p>Einheitliche Bedeutung unabhängig von Quellsystemen.</p></div><button class="btn primary small">New Semantic Attribute</button></div>
+      <table><thead><tr><th>Canonical Path</th><th>Semantic Key</th><th>Meaning</th><th>Used by</th><th>Status</th></tr></thead><tbody>
+        <tr><td>Party.displayName</td><td>party.display_name</td><td>Preferred human-readable name</td><td>11 use cases</td><td><span class="badge green">Active</span></td></tr>
+        <tr><td>Contract.startDate</td><td>contract.valid_from</td><td>Beginning of legal validity</td><td>8 use cases</td><td><span class="badge green">Active</span></td></tr>
+        <tr><td>Product.name</td><td>product.name</td><td>Language-independent product concept name</td><td>7 use cases</td><td><span class="badge green">Active</span></td></tr>
+        <tr><td>Address.street2</td><td>address.street_extra</td><td>Additional street line</td><td>2 use cases</td><td><span class="badge red">Deprecated</span></td></tr>
+      </tbody></table>
+    </div>
+  </template>
+
+  <template id="versions">
+    <div class="grid two-col">
+      <div class="card"><h2>Version 2.4</h2><p>Current production canonical</p><div class="version-meta"><span><b>42</b> entities</span><span><b>68</b> relations</span><span><b>124</b> semantic attributes</span></div><button class="btn primary">Create 2.5 Draft</button></div>
+      <div class="card"><h2>Compatibility Policy</h2><p>Breaking changes require migration plans and explicit approval.</p><div class="policy-row">Add optional attribute <span class="badge green">Compatible</span></div><div class="policy-row">Rename semantic key <span class="badge amber">Migration</span></div><div class="policy-row">Remove attribute <span class="badge red">Breaking</span></div></div>
+    </div>
+    <div class="card"><h2>Change Requests</h2><table><thead><tr><th>ID</th><th>Change</th><th>Requested by</th><th>Impact</th><th>Status</th></tr></thead><tbody><tr><td>CR-184</td><td>Represent partner as relation instead of embedded object</td><td>Broker Integration</td><td>3 use cases</td><td><span class="badge amber">Analysis</span></td></tr><tr><td>CR-181</td><td>Add multilingual Product labels</td><td>Product Search CN</td><td>1 use case</td><td><span class="badge green">Approved</span></td></tr></tbody></table></div>
+  </template>
+
+  <template id="quality">
+    <div class="grid stats-grid"><div class="card stat"><span>Semantic consistency</span><strong>97.8%</strong><small>Across all active mappings</small></div><div class="card stat"><span>Duplicate concepts</span><strong>3</strong><small>Potential merge candidates</small></div><div class="card stat warning"><span>Breaking drift</span><strong>2</strong><small>Source models changed</small></div><div class="card stat"><span>Validation coverage</span><strong>94%</strong><small>16 / 17 use cases</small></div></div>
+    <div class="card"><h2>Detected Conflicts</h2><div class="issue"><div><b>Broker.partner</b><p>Embedded partner data conflicts with canonical Party relation model.</p></div><span class="badge amber">Structural</span><button class="btn secondary small">Resolve</button></div><div class="issue"><div><b>CRM.customerStatus</b><p>Local enum contains “PROSPECT” which is not defined centrally.</p></div><span class="badge amber">Semantic</span><button class="btn secondary small">Resolve</button></div></div>
+  </template>
+
+  <template id="onboarding-start">
+    <div class="stepper"><span class="done">1</span><i></i><span>2</span><i></i><span>3</span><i></i><span>4</span><i></i><span>5</span></div>
+    <div class="grid two-col">
+      <div class="card form-card"><div class="eyebrow">Step 1</div><h2>Describe the new use case</h2><p>Grundinformationen bestimmen Scope, Ownership und relevante Canonical Domains.</p>
+        <label>Use Case Name<input value="Partner CRM Integration" /></label>
+        <label>Business Purpose<textarea>Synchronize brokers and partner contacts from CRM into iCore and provide a reusable partner view to downstream services.</textarea></label>
+        <div class="form-row"><label>Owner<input value="Customer Integration Team" /></label><label>Target Environment<select><option>Development</option><option>Test</option><option>Production</option></select></label></div>
+        <label>Relevant Domains<div class="chips"><span>Customer ×</span><span>Contract ×</span><button>+ Add domain</button></div></label>
+        <div class="footer-actions"><span></span><button class="btn primary next" data-next="source-model">Continue to Source Model →</button></div>
+      </div>
+      <div class="card preview"><h3>Expected outcome</h3><div class="preview-box"><b>Use Case Model</b><span>Local model owned by the use case</span></div><div class="arrow-down">↓</div><div class="preview-box accent"><b>Canonical Mapping</b><span>Semantic and structural alignment</span></div><div class="arrow-down">↓</div><div class="preview-box"><b>Validated Contract</b><span>Versioned and ready for runtime use</span></div></div>
+    </div>
+  </template>
+
+  <template id="source-model">
+    <div class="stepper"><span class="done">✓</span><i class="done"></i><span class="done">2</span><i></i><span>3</span><i></i><span>4</span><i></i><span>5</span></div>
+    <div class="card">
+      <div class="card-head"><div><div class="eyebrow">Step 2</div><h2>Define Source Data Model</h2><p>Importieren oder modellieren Sie das Datenmodell des neuen Use Cases.</p></div><div><button class="btn secondary small">Import OpenAPI</button> <button class="btn secondary small">Import JSON Schema</button></div></div>
+      <div class="model-builder">
+        <div class="model-list">
+          <button class="model-item active"><b>Broker</b><span>6 attributes</span></button>
+          <button class="model-item"><b>BrokerContact</b><span>5 attributes</span></button>
+          <button class="model-item"><b>ContractRef</b><span>3 attributes</span></button>
+          <button class="add-model">+ Add entity</button>
+        </div>
+        <div class="model-detail"><h3>Broker</h3><table><thead><tr><th>Field</th><th>Type</th><th>Example</th><th>Required</th></tr></thead><tbody>
+          <tr><td>brokerId</td><td>string</td><td>BR-4711</td><td>Yes</td></tr><tr><td>name</td><td>string</td><td>Muster Makler GmbH</td><td>Yes</td></tr><tr><td>status</td><td>enum</td><td>ACTIVE</td><td>Yes</td></tr><tr><td>email</td><td>string</td><td>service@broker.de</td><td>No</td></tr><tr><td>contractIds[]</td><td>string[]</td><td>CT-9912</td><td>No</td></tr><tr><td>address</td><td>object</td><td>{...}</td><td>No</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="footer-actions"><button class="btn secondary prev" data-next="onboarding-start">← Back</button><button class="btn primary next" data-next="mapping">Continue to Mapping →</button></div>
+    </div>
+  </template>
+
+  <template id="mapping">
+    <div class="stepper"><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="done">3</span><i></i><span>4</span><i></i><span>5</span></div>
+    <div class="grid mapping-layout">
+      <div class="card"><div class="eyebrow">Source Model</div><h2>Broker</h2><div class="mapping-fields"><div>brokerId <span>string</span></div><div>name <span>string</span></div><div>status <span>enum</span></div><div>email <span>string</span></div><div>contractIds[] <span>array</span></div><div>address <span>object</span></div></div></div>
+      <div class="mapping-center"><div class="score-ring">92<small>% fit</small></div><div class="map-line ok">brokerId → externalIds.crm</div><div class="map-line ok">name → displayName</div><div class="map-line ok">status → role.status</div><div class="map-line ok">email → contacts.email</div><div class="map-line warn">contractIds[] → relation</div><div class="map-line warn">address → Address entity</div></div>
+      <div class="card"><div class="eyebrow">Canonical Target</div><h2>Party + BrokerRole</h2><div class="mapping-fields canonical"><div>externalIds <span>Map</span></div><div>displayName <span>string</span></div><div>roles[] <span>relation</span></div><div>contacts[] <span>object</span></div><div>contracts[] <span>relation</span></div><div>addresses[] <span>relation</span></div></div></div>
+    </div>
+    <div class="card recommendations"><h2>AI Mapping Suggestions</h2><div class="rec"><span class="confidence high">98%</span><div><b>Broker should map to Party, not a new Canonical “Broker” entity.</b><p>“Broker” expresses a business role. Keep the Canonical model generic and use BrokerRole.</p></div><button class="btn primary small">Accept</button></div><div class="rec"><span class="confidence med">87%</span><div><b>Replace embedded contractIds with Party → Contract relations.</b><p>This aligns the local model with the central relationship strategy.</p></div><button class="btn secondary small">Review</button></div></div>
+    <div class="footer-actions"><button class="btn secondary prev" data-next="source-model">← Back</button><button class="btn primary next" data-next="validation">Validate Mapping →</button></div>
+  </template>
+
+  <template id="validation">
+    <div class="stepper"><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="done">4</span><i></i><span>5</span></div>
+    <div class="grid stats-grid"><div class="card stat"><span>Canonical Fit</span><strong>96%</strong><small>Excellent structural alignment</small></div><div class="card stat"><span>Mapped Fields</span><strong>14/15</strong><small>1 optional field open</small></div><div class="card stat"><span>Breaking Conflicts</span><strong>0</strong><small>Ready for publishing</small></div><div class="card stat warning"><span>Warnings</span><strong>2</strong><small>Non-blocking decisions</small></div></div>
+    <div class="card"><h2>Validation Results</h2><div class="validation-row success"><span>✓</span><div><b>Entity semantics compatible</b><p>Local Broker concept resolves to Party + BrokerRole.</p></div></div><div class="validation-row success"><span>✓</span><div><b>Relationship pattern compatible</b><p>Contract references are modeled as canonical relations.</p></div></div><div class="validation-row warning"><span>!</span><div><b>Local field broker.status has additional value “SUSPENDED_PENDING”.</b><p>Map to canonical UNKNOWN or propose extension.</p></div><button class="btn secondary small">Decide</button></div><div class="validation-row warning"><span>!</span><div><b>Address has local field “districtCode”.</b><p>No matching semantic attribute exists centrally.</p></div><button class="btn secondary small">Request extension</button></div></div>
+    <div class="footer-actions"><button class="btn secondary prev" data-next="mapping">← Back</button><button class="btn primary next" data-next="publish">Continue to Publish →</button></div>
+  </template>
+
+  <template id="publish">
+    <div class="stepper"><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="done">5</span></div>
+    <div class="grid two-col"><div class="card"><div class="eyebrow">Step 5</div><h2>Publish Use Case Contract</h2><p>Erstellt ein versioniertes, geprüftes Mapping zwischen Use Case und zentralem Canonical.</p><div class="summary-list"><div><span>Use Case</span><b>Partner CRM Integration</b></div><div><span>Canonical Version</span><b>2.4</b></div><div><span>Mapping Version</span><b>1.0.0</b></div><div><span>Compatibility</span><b class="text-green">96% · Compatible</b></div><div><span>Owner</span><b>Customer Integration Team</b></div></div><label>Release note<textarea>Initial CRM broker integration using Party + BrokerRole canonical representation.</textarea></label><button class="btn primary full" id="publishBtn">Publish Mapping Contract</button></div><div class="card preview"><h3>Artifacts generated</h3><div class="artifact"><b>mapping.json</b><span>Executable field + relation mapping</span></div><div class="artifact"><b>semantic-contract.yaml</b><span>Canonical compatibility contract</span></div><div class="artifact"><b>validation-report.json</b><span>Fit score, warnings and decisions</span></div><div class="artifact"><b>model-snapshot.json</b><span>Source model at onboarding time</span></div><div class="callout info"><b>Runtime use:</b> The semantic layer can use this mapping contract to translate source-specific structures into the iCore Canonical representation.</div></div></div>
+    <div id="publishSuccess" class="toast hidden">✓ Mapping Contract 1.0.0 published successfully</div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
